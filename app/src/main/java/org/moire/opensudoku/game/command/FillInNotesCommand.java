@@ -10,7 +10,7 @@ import org.moire.opensudoku.game.CellNote;
 
 public class FillInNotesCommand extends AbstractCellCommand {
 
-	private List<NoteEntry> mOldNotes = new ArrayList<NoteEntry>();
+	private List<NoteEntry> mOldNotes = new ArrayList<>();
 
 	public FillInNotesCommand() {
 	}

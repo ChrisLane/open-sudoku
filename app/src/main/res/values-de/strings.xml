@@ -35,7 +35,7 @@
 	<string name="one_puzzle">1 Sudoku-Rätsel</string>
 	<string name="n_puzzles">%d Sudoku-Rätsel</string>
 	<string name="all_solved">Alle gelöst</string>
-	<string name="n_solved">%s gelöst</string>
+	<string name="n_solved">%d gelöst</string>
 	<string name="n_unsolved">%d neu</string>
 	<string name="n_playing">%d in Bearbeitung</string>
 
@@ -206,9 +206,9 @@
     <string name="theme_default">Standard</string>
     <string name="theme_paper">Papier</string>
     <string name="theme_graph_paper">Karopapier</string>
-    <string name="theme_light">Hell</string>
-    <string name="theme_paper_light">Papier Hell</string>
-    <string name="theme_graph_paper_light">Karopapier Hell</string>
+    <string name="theme_dark">Hell</string>
+    <string name="theme_paper_dark">Papier Hell</string>
+    <string name="theme_graph_paper_dark">Karopapier Hell</string>
     <string name="theme_high_contrast">Hoher Kontrast</string>
     <string name="theme_inverted_high_contrast">Invertierter Hoher Kontrast</string>
     <string name="theme_custom">Eigenes Thema</string>

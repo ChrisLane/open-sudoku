@@ -43,7 +43,7 @@
 	<string name="one_puzzle">1 puzzle</string>
 	<string name="n_puzzles">%d puzzles</string>
 	<string name="all_solved">todos resueltos</string>
-	<string name="n_solved">%s resuelto</string>
+	<string name="n_solved">%d resuelto</string>
 	<string name="n_unsolved">%d sin resolver</string>
 	<string name="n_playing">%d jugando</string>
 
@@ -224,9 +224,9 @@
 	<string name="theme_default">Por defecto</string>
 	<string name="theme_paper">Papel</string>
     <string name="theme_graph_paper">Papel cuadriculado</string>
-	<string name="theme_light">Claro</string>
-	<string name="theme_paper_light">Papel claro</string>
-    <string name="theme_graph_paper_light">Papel cuadriculado claro</string>
+	<string name="theme_dark">Claro</string>
+	<string name="theme_paper_dark">Papel claro</string>
+    <string name="theme_graph_paper_dark">Papel cuadriculado claro</string>
     <string name="theme_high_contrast">Alto contraste</string>
     <string name="theme_inverted_high_contrast">Alto contraste invertido</string>
 	<string name="theme_custom">Tema personalizado</string>

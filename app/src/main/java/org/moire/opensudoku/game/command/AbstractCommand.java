@@ -59,15 +59,15 @@ public abstract class AbstractCommand {
 
     private static final CommandDef[] commands = {
             new CommandDef(ClearAllNotesCommand.class.getSimpleName(),"c1",
-                    new CommandCreatorFunction() { public AbstractCommand create() {return new ClearAllNotesCommand();} }),
+                    ClearAllNotesCommand::new),
             new CommandDef(EditCellNoteCommand.class.getSimpleName(),"c2",
-                    new CommandCreatorFunction() { public AbstractCommand create() {return new EditCellNoteCommand();} }),
+                    EditCellNoteCommand::new),
             new CommandDef(FillInNotesCommand.class.getSimpleName(),"c3",
-                    new CommandCreatorFunction() { public AbstractCommand create() {return new FillInNotesCommand();} }),
+                    FillInNotesCommand::new),
             new CommandDef(SetCellValueCommand.class.getSimpleName(),"c4",
-                    new CommandCreatorFunction() { public AbstractCommand create() {return new SetCellValueCommand();} }),
+                    SetCellValueCommand::new),
             new CommandDef(CheckpointCommand.class.getSimpleName(),"c5",
-                    new CommandCreatorFunction() { public AbstractCommand create() {return new CheckpointCommand();} })
+                    CheckpointCommand::new)
     };
 
 	public static AbstractCommand deserialize(StringTokenizer data) {

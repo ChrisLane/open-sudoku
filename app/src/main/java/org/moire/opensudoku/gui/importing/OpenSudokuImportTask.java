@@ -1,22 +1,20 @@
 package org.moire.opensudoku.gui.importing;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
 import android.content.ContentResolver;
 import android.net.Uri;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.db.SudokuImportParams;
 import org.moire.opensudoku.db.SudokuInvalidFormatException;
 import org.moire.opensudoku.game.SudokuGame;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URISyntaxException;
 
 /**
  * Handles import of application/x-opensudoku or .opensudoku files.
@@ -50,14 +48,10 @@ public class OpenSudokuImportTask extends AbstractImportTask {
 			} finally {
 				streamReader.close();
 			}
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException | IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 
 	private void importXml(Reader in) throws SudokuInvalidFormatException {
 		BufferedReader inBR = new BufferedReader(in);
@@ -95,12 +89,10 @@ public class OpenSudokuImportTask extends AbstractImportTask {
 				}
 				eventType = xpp.next();
 			}
-		} catch (XmlPullParserException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
+		} catch (XmlPullParserException | IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 
 	private void importV2(XmlPullParser parser)
 			throws XmlPullParserException, IOException, SudokuInvalidFormatException {

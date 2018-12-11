@@ -20,18 +20,13 @@
 
 package org.moire.opensudoku.gui;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.Toast;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.db.SudokuDatabase;
@@ -45,7 +40,7 @@ import org.moire.opensudoku.utils.AndroidUtils;
  *
  * @author romario
  */
-public class SudokuEditActivity extends Activity {
+public class SudokuEditActivity extends AppCompatActivity {
 
 	/**
 	 * When inserting new data, I need to know folder in which will new sudoku be stored.
@@ -95,8 +90,8 @@ public class SudokuEditActivity extends Activity {
 		AndroidUtils.setThemeFromPreferences(this);
 
 		setContentView(R.layout.sudoku_edit);
-		mRootLayout = (ViewGroup) findViewById(R.id.root_layout);
-		mBoard = (SudokuBoardView) findViewById(R.id.sudoku_board);
+		mRootLayout = findViewById(R.id.root_layout);
+		mBoard = findViewById(R.id.sudoku_board);
 
 		mDatabase = new SudokuDatabase(getApplicationContext());
 
@@ -143,7 +138,7 @@ public class SudokuEditActivity extends Activity {
 		}
 		mBoard.setGame(mGame);
 
-		mInputMethods = (IMControlPanel) findViewById(R.id.input_methods);
+		mInputMethods = findViewById(R.id.input_methods);
 		mInputMethods.initialize(mBoard, mGame, null);
 
 		// only numpad input method will be enabled
@@ -162,12 +157,9 @@ public class SudokuEditActivity extends Activity {
 			// FIXME: When activity is resumed, title isn't sometimes hidden properly (there is black 
 			// empty space at the top of the screen). This is desperate workaround.
 			if (mFullScreen) {
-				mGuiHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-						mRootLayout.requestLayout();
-					}
+				mGuiHandler.postDelayed(() -> {
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					mRootLayout.requestLayout();
 				}, 1000);
 			}
 

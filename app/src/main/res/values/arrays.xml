@@ -14,9 +14,9 @@
 		<item>@string/theme_default</item>
 		<item>@string/theme_paper</item>
         <item>@string/theme_graph_paper</item>
-		<item>@string/theme_light</item>
-        <item>@string/theme_paper_light</item>
-        <item>@string/theme_graph_paper_light</item>
+		<item>@string/theme_dark</item>
+        <item>@string/theme_paper_dark</item>
+        <item>@string/theme_graph_paper_dark</item>
         <item>@string/theme_high_contrast</item>
         <item>@string/theme_inverted_high_contrast</item>
 		<item>@string/theme_custom</item>
@@ -26,9 +26,9 @@
 		<item>default</item>
 		<item>paper</item>
         <item>graphpaper</item>
-		<item>light</item>
-		<item>paperlight</item>
-        <item>graphpaperlight</item>
+		<item>dark</item>
+		<item>paperdark</item>
+        <item>graphpaperdark</item>
         <item>highcontrast</item>
         <item>invertedhighcontrast</item>
 		<item>custom</item>

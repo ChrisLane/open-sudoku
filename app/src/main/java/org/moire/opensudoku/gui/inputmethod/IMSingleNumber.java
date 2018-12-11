@@ -20,15 +20,11 @@
 
 package org.moire.opensudoku.gui.inputmethod;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,13 +32,16 @@ import android.widget.ImageButton;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.game.Cell;
 import org.moire.opensudoku.game.CellCollection;
+import org.moire.opensudoku.game.CellCollection.OnChangeListener;
 import org.moire.opensudoku.game.CellNote;
 import org.moire.opensudoku.game.SudokuGame;
-import org.moire.opensudoku.game.CellCollection.OnChangeListener;
 import org.moire.opensudoku.gui.HintsQueue;
 import org.moire.opensudoku.gui.SudokuBoardView;
 import org.moire.opensudoku.gui.SudokuPlayActivity;
 import org.moire.opensudoku.gui.inputmethod.IMControlPanelStatePersister.StateBundle;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents following type of number input workflow: Number buttons are displayed
@@ -145,17 +144,17 @@ public class IMSingleNumber extends InputMethod {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View controlPanel = inflater.inflate(R.layout.im_single_number, null);
 
-		mNumberButtons = new HashMap<Integer, Button>();
-		mNumberButtons.put(1, (Button) controlPanel.findViewById(R.id.button_1));
-		mNumberButtons.put(2, (Button) controlPanel.findViewById(R.id.button_2));
-		mNumberButtons.put(3, (Button) controlPanel.findViewById(R.id.button_3));
-		mNumberButtons.put(4, (Button) controlPanel.findViewById(R.id.button_4));
-		mNumberButtons.put(5, (Button) controlPanel.findViewById(R.id.button_5));
-		mNumberButtons.put(6, (Button) controlPanel.findViewById(R.id.button_6));
-		mNumberButtons.put(7, (Button) controlPanel.findViewById(R.id.button_7));
-		mNumberButtons.put(8, (Button) controlPanel.findViewById(R.id.button_8));
-		mNumberButtons.put(9, (Button) controlPanel.findViewById(R.id.button_9));
-		mNumberButtons.put(0, (Button) controlPanel.findViewById(R.id.button_clear));
+		mNumberButtons = new HashMap<>();
+		mNumberButtons.put(1, controlPanel.findViewById(R.id.button_1));
+		mNumberButtons.put(2, controlPanel.findViewById(R.id.button_2));
+		mNumberButtons.put(3, controlPanel.findViewById(R.id.button_3));
+		mNumberButtons.put(4, controlPanel.findViewById(R.id.button_4));
+		mNumberButtons.put(5, controlPanel.findViewById(R.id.button_5));
+		mNumberButtons.put(6, controlPanel.findViewById(R.id.button_6));
+		mNumberButtons.put(7, controlPanel.findViewById(R.id.button_7));
+		mNumberButtons.put(8, controlPanel.findViewById(R.id.button_8));
+		mNumberButtons.put(9, controlPanel.findViewById(R.id.button_9));
+		mNumberButtons.put(0, controlPanel.findViewById(R.id.button_clear));
 
 		for (Integer num : mNumberButtons.keySet()) {
 			Button b = mNumberButtons.get(num);
@@ -164,47 +163,31 @@ public class IMSingleNumber extends InputMethod {
             b.setOnTouchListener(mNumberButtonTouched);
 		}
 
-		mSwitchNumNoteButton = (ImageButton) controlPanel.findViewById(R.id.switch_num_note);
-		mSwitchNumNoteButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mEditMode = mEditMode == MODE_EDIT_VALUE ? MODE_EDIT_NOTE : MODE_EDIT_VALUE;
-				update();
-			}
-
+		mSwitchNumNoteButton = controlPanel.findViewById(R.id.switch_num_note);
+		mSwitchNumNoteButton.setOnClickListener(v -> {
+			mEditMode = mEditMode == MODE_EDIT_VALUE ? MODE_EDIT_NOTE : MODE_EDIT_VALUE;
+			update();
 		});
 
 		return controlPanel;
 	}
 
-    private View.OnTouchListener mNumberButtonTouched = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mSelectedNumber = (Integer) view.getTag();
-			onSelectedNumberChanged();
-            update();
-            return true;
-        }
-    };
-
-	private OnClickListener mNumberButtonClicked = new OnClickListener() {
-
-		@Override
-		public void onClick(View v) {
-			mSelectedNumber = (Integer) v.getTag();
-			onSelectedNumberChanged();
-			update();
-		}
+    private View.OnTouchListener mNumberButtonTouched = (view, motionEvent) -> {
+		mSelectedNumber = (Integer) view.getTag();
+		onSelectedNumberChanged();
+		update();
+		return true;
 	};
 
-	private OnChangeListener mOnCellsChangeListener = new OnChangeListener() {
+	private OnClickListener mNumberButtonClicked = v -> {
+		mSelectedNumber = (Integer) v.getTag();
+		onSelectedNumberChanged();
+		update();
+	};
 
-		@Override
-		public void onChange() {
-			if (mActive) {
-				update();
-			}
+	private OnChangeListener mOnCellsChangeListener = () -> {
+		if (mActive) {
+			update();
 		}
 	};
 
@@ -220,54 +203,51 @@ public class IMSingleNumber extends InputMethod {
 
 		// TODO: sometimes I change background too early and button stays in pressed state
 		// this is just ugly workaround
-		mGuiHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				for (Button b : mNumberButtons.values()) {
-					if (b.getTag().equals(mSelectedNumber)) {
-						b.setTextAppearance(mContext, android.R.style.TextAppearance_Large);
-						b.getBackground().setColorFilter(null);
-                        /* Use focus instead color */
-						/*LightingColorFilter selBkgColorFilter = new LightingColorFilter(
-								mContext.getResources().getColor(R.color.im_number_button_selected_background), 0);
-						b.getBackground().setColorFilter(selBkgColorFilter);*/
-                        b.requestFocus();
-					} else {
-						b.setTextAppearance(mContext, android.R.style.TextAppearance_Widget_Button);
-						b.getBackground().setColorFilter(null);
-					}
+		mGuiHandler.postDelayed(() -> {
+			for (Button b : mNumberButtons.values()) {
+				if (b.getTag().equals(mSelectedNumber)) {
+					b.setTextAppearance(mContext, android.R.style.TextAppearance_Large);
+					b.getBackground().setColorFilter(null);
+/* Use focus instead color */
+					/*LightingColorFilter selBkgColorFilter = new LightingColorFilter(
+							mContext.getResources().getColor(R.color.im_number_button_selected_background), 0);
+					b.getBackground().setColorFilter(selBkgColorFilter);*/
+b.requestFocus();
+				} else {
+					b.setTextAppearance(mContext, android.R.style.TextAppearance_Widget_Button);
+					b.getBackground().setColorFilter(null);
 				}
+			}
 
-				Map<Integer, Integer> valuesUseCount = null;
-				if (mHighlightCompletedValues || mShowNumberTotals)
-					valuesUseCount = mGame.getCells().getValuesUseCount();
+			Map<Integer, Integer> valuesUseCount = null;
+			if (mHighlightCompletedValues || mShowNumberTotals)
+				valuesUseCount = mGame.getCells().getValuesUseCount();
 
-				if (mHighlightCompletedValues) {
-					//int completedTextColor = mContext.getResources().getColor(R.color.im_number_button_completed_text);
-					for (Map.Entry<Integer, Integer> entry : valuesUseCount.entrySet()) {
-						boolean highlightValue = entry.getValue() >= CellCollection.SUDOKU_SIZE;
-						if (highlightValue) {
-							Button b = mNumberButtons.get(entry.getKey());
-							/*if (b.getTag().equals(mSelectedNumber)) {
-								b.setTextColor(completedTextColor);
-							} else {
-                                b.getBackground().setColorFilter(0xFF008800, PorterDuff.Mode.MULTIPLY);
-							}*/
-                            // Only set background color
-                            b.getBackground().setColorFilter(0xFF1B5E20, PorterDuff.Mode.MULTIPLY);
-							b.setTextColor(Color.WHITE);
-						}
-					}
-				}
-
-				if (mShowNumberTotals) {
-					for (Map.Entry<Integer, Integer> entry : valuesUseCount.entrySet()) {
+			if (mHighlightCompletedValues) {
+				//int completedTextColor = mContext.getResources().getColor(R.color.im_number_button_completed_text);
+				for (Map.Entry<Integer, Integer> entry : valuesUseCount.entrySet()) {
+					boolean highlightValue = entry.getValue() >= CellCollection.SUDOKU_SIZE;
+					if (highlightValue) {
 						Button b = mNumberButtons.get(entry.getKey());
-						if (!b.getTag().equals(mSelectedNumber))
-							b.setText(entry.getKey() + " (" + entry.getValue() + ")");
-						else
-							b.setText("" + entry.getKey());
+						/*if (b.getTag().equals(mSelectedNumber)) {
+							b.setTextColor(completedTextColor);
+						} else {
+b.getBackground().setColorFilter(0xFF008800, PorterDuff.Mode.MULTIPLY);
+						}*/
+// Only set background color
+b.getBackground().setColorFilter(0xFF1B5E20, PorterDuff.Mode.MULTIPLY);
+						b.setTextColor(Color.WHITE);
 					}
+				}
+			}
+
+			if (mShowNumberTotals) {
+				for (Map.Entry<Integer, Integer> entry : valuesUseCount.entrySet()) {
+					Button b = mNumberButtons.get(entry.getKey());
+					if (!b.getTag().equals(mSelectedNumber))
+						b.setText(entry.getKey() + " (" + entry.getValue() + ")");
+					else
+						b.setText("" + entry.getKey());
 				}
 			}
 		}, 100);

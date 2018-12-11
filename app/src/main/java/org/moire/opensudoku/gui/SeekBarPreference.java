@@ -169,7 +169,7 @@ public class SeekBarPreference extends DialogPreference {
 	protected void onBindDialogView(View view) {
 		super.onBindDialogView(view);
 
-		mValueLabel = (TextView) view.findViewById(R.id.value);
+		mValueLabel = view.findViewById(R.id.value);
 
 		SeekBar seekBar = mSeekBar;
 		seekBar.setProgress(getValue() - mMin);
@@ -191,7 +191,7 @@ public class SeekBarPreference extends DialogPreference {
 	 * @param dialogView The dialog view.
 	 */
 	protected void onAddSeekBarToDialogView(View dialogView, SeekBar seekBar) {
-		ViewGroup container = (ViewGroup) dialogView
+		ViewGroup container = dialogView
 				.findViewById(R.id.seek_bar_container);
 		if (container != null) {
 			container.addView(seekBar, ViewGroup.LayoutParams.FILL_PARENT,

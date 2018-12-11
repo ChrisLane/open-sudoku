@@ -32,7 +32,7 @@
 	<string name="one_puzzle">1 jogo</string>
 	<string name="n_puzzles">%d jogos</string>
 	<string name="all_solved">todos resolvidos</string>
-	<string name="n_solved">%s resolvidos</string>
+	<string name="n_solved">%d resolvidos</string>
 	<string name="n_unsolved">%d não resolvidos</string>
 	<string name="n_playing">jogando %d</string>
 	<string name="solved">Resolvido</string>
@@ -207,9 +207,9 @@
     <string name="theme_default">Padrão</string>
     <string name="theme_paper">Paper</string>
     <string name="theme_graph_paper">Graph Paper</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_paper_light">Paper Light</string>
-    <string name="theme_graph_paper_light">Graph Paper Light</string>
+    <string name="theme_dark">Light</string>
+    <string name="theme_paper_dark">Paper Light</string>
+    <string name="theme_graph_paper_dark">Graph Paper Light</string>
     <string name="theme_high_contrast">High Contrast</string>
     <string name="theme_inverted_high_contrast">Inverted High Contrast</string>
     <string name="theme_custom">Custom Theme</string>

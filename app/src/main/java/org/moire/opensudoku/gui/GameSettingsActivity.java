@@ -47,29 +47,19 @@ public class GameSettingsActivity extends PreferenceActivity {
         enableScreenCustomTheme(mTheme.getValue());
 	}
 
-	private OnPreferenceChangeListener mShowHintsChanged = new OnPreferenceChangeListener() {
+	private OnPreferenceChangeListener mShowHintsChanged = (preference, newValue) -> {
+		boolean newVal = (Boolean) newValue;
 
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			boolean newVal = (Boolean) newValue;
-
-			HintsQueue hm = new HintsQueue(GameSettingsActivity.this);
-			if (newVal) {
-				hm.resetOneTimeHints();
-			}
-			return true;
+		HintsQueue hm = new HintsQueue(GameSettingsActivity.this);
+		if (newVal) {
+			hm.resetOneTimeHints();
 		}
-
+		return true;
 	};
 
-	private OnPreferenceChangeListener mThemeChanged = new OnPreferenceChangeListener() {
-
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-            enableScreenCustomTheme((String) newValue);
-			return true;
-		}
-
+	private OnPreferenceChangeListener mThemeChanged = (preference, newValue) -> {
+enableScreenCustomTheme((String) newValue);
+		return true;
 	};
 
 

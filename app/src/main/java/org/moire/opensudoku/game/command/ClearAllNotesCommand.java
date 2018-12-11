@@ -29,7 +29,7 @@ import org.moire.opensudoku.game.CellNote;
 
 public class ClearAllNotesCommand extends AbstractCellCommand {
 
-	private List<NoteEntry> mOldNotes = new ArrayList<NoteEntry>();
+	private List<NoteEntry> mOldNotes = new ArrayList<>();
 
 
 	public ClearAllNotesCommand() {

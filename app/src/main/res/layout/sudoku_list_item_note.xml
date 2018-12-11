@@ -17,7 +17,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:capitalize="sentences"
         android:ems="10"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:maxLines="4"

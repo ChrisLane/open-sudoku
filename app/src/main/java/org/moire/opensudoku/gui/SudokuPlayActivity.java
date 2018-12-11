@@ -20,39 +20,28 @@
 
 package org.moire.opensudoku.gui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.*;
 import android.widget.TextView;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.db.SudokuDatabase;
 import org.moire.opensudoku.game.Cell;
 import org.moire.opensudoku.game.SudokuGame;
 import org.moire.opensudoku.game.SudokuGame.OnPuzzleSolvedListener;
-import org.moire.opensudoku.gui.inputmethod.IMControlPanel;
-import org.moire.opensudoku.gui.inputmethod.IMControlPanelStatePersister;
-import org.moire.opensudoku.gui.inputmethod.IMNumpad;
-import org.moire.opensudoku.gui.inputmethod.IMPopup;
-import org.moire.opensudoku.gui.inputmethod.IMSingleNumber;
+import org.moire.opensudoku.gui.inputmethod.*;
 import org.moire.opensudoku.utils.AndroidUtils;
 
 /*
  */
-public class SudokuPlayActivity extends Activity {
+public class SudokuPlayActivity extends AppCompatActivity {
 
 	public static final String EXTRA_SUDOKU_ID = "sudoku_id";
 
@@ -119,9 +108,9 @@ public class SudokuPlayActivity extends Activity {
 
 		setContentView(R.layout.sudoku_play);
 
-		mRootLayout = (ViewGroup) findViewById(R.id.root_layout);
-		mSudokuBoard = (SudokuBoardView) findViewById(R.id.sudoku_board);
-		mTimeLabel = (TextView) findViewById(R.id.time_label);
+		mRootLayout = findViewById(R.id.root_layout);
+		mSudokuBoard = findViewById(R.id.sudoku_board);
+		mTimeLabel = findViewById(R.id.time_label);
 
 		mDatabase = new SudokuDatabase(getApplicationContext());
 		mHintsQueue = new HintsQueue(this);
@@ -156,7 +145,7 @@ public class SudokuPlayActivity extends Activity {
 
 		mHintsQueue.showOneTimeHint("welcome", R.string.welcome, R.string.first_run_hint);
 
-		mIMControlPanel = (IMControlPanel) findViewById(R.id.input_methods);
+		mIMControlPanel = findViewById(R.id.input_methods);
 		mIMControlPanel.initialize(mSudokuBoard, mSudokuGame, mHintsQueue);
 
 		mIMControlPanelStatePersister = new IMControlPanelStatePersister(this);
@@ -242,12 +231,9 @@ public class SudokuPlayActivity extends Activity {
 			// FIXME: When activity is resumed, title isn't sometimes hidden properly (there is black 
 			// empty space at the top of the screen). This is desperate workaround.
 			if (mFullScreen) {
-				mGuiHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-						mRootLayout.requestLayout();
-					}
+				mGuiHandler.postDelayed(() -> {
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					mRootLayout.requestLayout();
 				}, 1000);
 			}
 
@@ -421,17 +407,15 @@ public class SudokuPlayActivity extends Activity {
 						.setIcon(R.drawable.ic_restore)
 						.setTitle(R.string.app_name)
 						.setMessage(R.string.restart_confirm)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								// Restart game
-								mSudokuGame.reset();
-								mSudokuGame.start();
-								mSudokuBoard.setReadOnly(false);
-								if (mShowTime) {
-									mGameTimer.start();
-								}
-								removeDialog(DIALOG_WELL_DONE);
+						.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+							// Restart game
+							mSudokuGame.reset();
+							mSudokuGame.start();
+							mSudokuBoard.setReadOnly(false);
+							if (mShowTime) {
+								mGameTimer.start();
 							}
+							removeDialog(DIALOG_WELL_DONE);
 						})
 						.setNegativeButton(android.R.string.no, null)
 						.create();
@@ -440,11 +424,7 @@ public class SudokuPlayActivity extends Activity {
 						.setIcon(R.drawable.ic_delete)
 						.setTitle(R.string.app_name)
 						.setMessage(R.string.clear_all_notes_confirm)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								mSudokuGame.clearAllNotes();
-							}
-						})
+						.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> mSudokuGame.clearAllNotes())
 						.setNegativeButton(android.R.string.no, null)
 						.create();
 			case DIALOG_UNDO_TO_CHECKPOINT:
@@ -452,11 +432,9 @@ public class SudokuPlayActivity extends Activity {
 						.setIcon(R.drawable.ic_undo)
 						.setTitle(R.string.app_name)
 						.setMessage(R.string.undo_to_checkpoint_confirm)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								mSudokuGame.undoToCheckpoint();
-								selectLastChangedCell();
-							}
+						.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+							mSudokuGame.undoToCheckpoint();
+							selectLastChangedCell();
 						})
 						.setNegativeButton(android.R.string.no, null)
 						.create();

@@ -20,20 +20,16 @@
 
 package org.moire.opensudoku.gui;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
-import org.moire.opensudoku.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
+import org.moire.opensudoku.R;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class HintsQueue {
 	// TODO: should be persisted in activity's state
@@ -52,16 +48,10 @@ public class HintsQueue {
 		mPrefs = mContext.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
 
 		SharedPreferences gameSettings = PreferenceManager.getDefaultSharedPreferences(context);
-		gameSettings.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
-
-			@Override
-			public void onSharedPreferenceChanged(
-					SharedPreferences sharedPreferences, String key) {
-				if (key.equals("show_hints")) {
-					mOneTimeHintsEnabled = sharedPreferences.getBoolean("show_hints", true);
-				}
+		gameSettings.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
+			if (key.equals("show_hints")) {
+				mOneTimeHintsEnabled = sharedPreferences.getBoolean("show_hints", true);
 			}
-
 		});
 		mOneTimeHintsEnabled = gameSettings.getBoolean("show_hints", true);
 
@@ -71,16 +61,9 @@ public class HintsQueue {
 				.setMessage("")
 				.setPositiveButton(R.string.close, mHintClosed).create();
 
-		mHintDialog.setOnDismissListener(new OnDismissListener() {
+		mHintDialog.setOnDismissListener(dialog -> processQueue());
 
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				processQueue();
-			}
-
-		});
-
-		mMessages = new LinkedList<Message>();
+		mMessages = new LinkedList<>();
 	}
 
 	private void addHint(Message hint) {
@@ -115,13 +98,8 @@ public class HintsQueue {
 		}
 	}
 
-	private OnClickListener mHintClosed = new OnClickListener() {
-
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			//processQueue();
-		}
-
+	private OnClickListener mHintClosed = (dialog, which) -> {
+		//processQueue();
 	};
 
 	public void showHint(int titleResID, int messageResID, Object... args) {
@@ -148,7 +126,7 @@ public class HintsQueue {
 				showHint(titleResID, messageResID, args);
 				Editor editor = mPrefs.edit();
 				editor.putBoolean(hintKey, true);
-				editor.commit();
+				editor.apply();
 			}
 		}
 
@@ -165,7 +143,7 @@ public class HintsQueue {
 	public void resetOneTimeHints() {
 		Editor editor = mPrefs.edit();
 		editor.clear();
-		editor.commit();
+		editor.apply();
 	}
 
 	/**

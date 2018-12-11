@@ -44,7 +44,7 @@
     <string name="one_puzzle">1 bulmaca</string>
     <string name="n_puzzles">%d bulmaca</string>
     <string name="all_solved">Hepsi çözüldü</string>
-    <string name="n_solved">%s çözüldü</string>
+    <string name="n_solved">%d çözüldü</string>
     <string name="n_unsolved">%d çözülmedi</string>
     <string name="n_playing">%d oynanıyor</string>
 
@@ -191,9 +191,9 @@
     <string name="theme_default">Default</string>
     <string name="theme_paper">Paper</string>
     <string name="theme_graph_paper">Graph Paper</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_paper_light">Paper Light</string>
-    <string name="theme_graph_paper_light">Graph Paper Light</string>
+    <string name="theme_dark">Light</string>
+    <string name="theme_paper_dark">Paper Light</string>
+    <string name="theme_graph_paper_dark">Graph Paper Light</string>
     <string name="theme_high_contrast">High Contrast</string>
     <string name="theme_inverted_high_contrast">Inverted High Contrast</string>
     <string name="theme_custom">Custom Theme</string>

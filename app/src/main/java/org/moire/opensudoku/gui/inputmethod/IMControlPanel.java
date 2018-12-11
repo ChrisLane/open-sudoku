@@ -20,22 +20,21 @@
 
 package org.moire.opensudoku.gui.inputmethod;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import org.moire.opensudoku.R;
-import org.moire.opensudoku.game.Cell;
 import org.moire.opensudoku.game.SudokuGame;
 import org.moire.opensudoku.gui.HintsQueue;
 import org.moire.opensudoku.gui.SudokuBoardView;
 import org.moire.opensudoku.gui.SudokuBoardView.OnCellSelectedListener;
 import org.moire.opensudoku.gui.SudokuBoardView.OnCellTappedListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author romario
@@ -50,7 +49,7 @@ public class IMControlPanel extends LinearLayout {
 	private SudokuGame mGame;
 	private HintsQueue mHintsQueue;
 
-	private List<InputMethod> mInputMethods = new ArrayList<InputMethod>();
+	private List<InputMethod> mInputMethods = new ArrayList<>();
 	private int mActiveMethodIndex = -1;
 
 	public IMControlPanel(Context context) {
@@ -235,36 +234,25 @@ public class IMControlPanel extends LinearLayout {
 		InputMethod im = mInputMethods.get(methodID);
 		if (!im.isInputMethodViewCreated()) {
 			View controlPanel = im.getInputMethodView();
-			Button switchModeButton = (Button) controlPanel.findViewById(R.id.switch_input_mode);
+			Button switchModeButton = controlPanel.findViewById(R.id.switch_input_mode);
 			switchModeButton.setOnClickListener(mSwitchModeListener);
 			this.addView(controlPanel, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		}
 	}
 
-	private OnCellTappedListener mOnCellTapListener = new OnCellTappedListener() {
-		@Override
-		public void onCellTapped(Cell cell) {
-			if (mActiveMethodIndex != -1 && mInputMethods != null) {
-				mInputMethods.get(mActiveMethodIndex).onCellTapped(cell);
-			}
+	private OnCellTappedListener mOnCellTapListener = cell -> {
+		if (mActiveMethodIndex != -1 && mInputMethods != null) {
+			mInputMethods.get(mActiveMethodIndex).onCellTapped(cell);
 		}
 	};
 
-	private OnCellSelectedListener mOnCellSelected = new OnCellSelectedListener() {
-		@Override
-		public void onCellSelected(Cell cell) {
-			if (mActiveMethodIndex != -1 && mInputMethods != null) {
-				mInputMethods.get(mActiveMethodIndex).onCellSelected(cell);
-			}
+	private OnCellSelectedListener mOnCellSelected = cell -> {
+		if (mActiveMethodIndex != -1 && mInputMethods != null) {
+			mInputMethods.get(mActiveMethodIndex).onCellSelected(cell);
 		}
 	};
 
-	private OnClickListener mSwitchModeListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			activateNextInputMethod();
-		}
-	};
+	private OnClickListener mSwitchModeListener = v -> activateNextInputMethod();
 
 //    /**
 //     * Used to save / restore state of control panel.

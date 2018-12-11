@@ -1,18 +1,18 @@
 package org.moire.opensudoku.gui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.gui.importing.AbstractImportTask;
+import org.moire.opensudoku.gui.importing.AbstractImportTask.OnImportFinishedListener;
 import org.moire.opensudoku.gui.importing.ExtrasImportTask;
 import org.moire.opensudoku.gui.importing.OpenSudokuImportTask;
 import org.moire.opensudoku.gui.importing.SdmImportTask;
-import org.moire.opensudoku.gui.importing.AbstractImportTask.OnImportFinishedListener;
 import org.moire.opensudoku.utils.Const;
 
 /**
@@ -21,7 +21,7 @@ import org.moire.opensudoku.utils.Const;
  *
  * @author romario
  */
-public class SudokuImportActivity extends Activity {
+public class SudokuImportActivity extends AppCompatActivity {
 	/**
 	 * Name of folder to which games should be imported.
 	 */
@@ -48,7 +48,7 @@ public class SudokuImportActivity extends Activity {
 		getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
 				R.mipmap.ic_launcher);
 
-		ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
+		ProgressBar progressBar = findViewById(R.id.progress);
 
 		AbstractImportTask importTask;
 		Intent intent = getIntent();
@@ -94,27 +94,23 @@ public class SudokuImportActivity extends Activity {
 		importTask.execute();
 	}
 
-	private OnImportFinishedListener mOnImportFinishedListener = new OnImportFinishedListener() {
-
-		@Override
-		public void onImportFinished(boolean importSuccessful, long folderId) {
-			if (importSuccessful) {
-				if (folderId == -1) {
-					// multiple folders were imported, go to folder list
-					Intent i = new Intent(SudokuImportActivity.this,
-							FolderListActivity.class);
-					startActivity(i);
-				} else {
-					// one folder was imported, go to this folder
-					Intent i = new Intent(SudokuImportActivity.this,
-							SudokuListActivity.class);
-					i.putExtra(SudokuListActivity.EXTRA_FOLDER_ID, folderId);
-					startActivity(i);
-				}
-			}
-			// call finish, so this activity won't be part of history
-			finish();
-		}
-	};
+	private OnImportFinishedListener mOnImportFinishedListener = (importSuccessful, folderId) -> {
+        if (importSuccessful) {
+            if (folderId == -1) {
+                // multiple folders were imported, go to folder list
+                Intent i = new Intent(SudokuImportActivity.this,
+                        FolderListActivity.class);
+                startActivity(i);
+            } else {
+                // one folder was imported, go to this folder
+                Intent i = new Intent(SudokuImportActivity.this,
+                        SudokuListActivity.class);
+                i.putExtra(SudokuListActivity.EXTRA_FOLDER_ID, folderId);
+                startActivity(i);
+            }
+        }
+        // call finish, so this activity won't be part of history
+        finish();
+    };
 
 }

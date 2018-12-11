@@ -34,7 +34,7 @@
 	<string name="one_puzzle">1 rompicapo</string>
 	<string name="n_puzzles">%d rompicapi</string>
 	<string name="all_solved">tutti risolti</string>
-	<string name="n_solved">%s risolti</string>
+	<string name="n_solved">%d risolti</string>
 	<string name="n_unsolved">%d non risolti</string>
 	<string name="n_playing">%d giocati</string>
 
@@ -216,9 +216,9 @@
     <string name="theme_default">Predefinito</string>
     <string name="theme_paper">Carta</string>
     <string name="theme_graph_paper">Carta millimetrata</string>
-    <string name="theme_light">Chiaro</string>
-    <string name="theme_paper_light">Carta chiara</string>
-    <string name="theme_graph_paper_light">Carta millimetrata chiara</string>
+    <string name="theme_dark">Chiaro</string>
+    <string name="theme_paper_dark">Carta chiara</string>
+    <string name="theme_graph_paper_dark">Carta millimetrata chiara</string>
     <string name="theme_high_contrast">Alto contrasto</string>
     <string name="theme_inverted_high_contrast">Alto contrasto rovesciato</string>
     <string name="theme_custom">Tema personalizzato</string>

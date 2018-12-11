@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar" />
+	<style name="Theme" parent="Theme.AppCompat.Light.DarkActionBar" />
 
 	<style name="Theme.Default">
 		<item name="lineColor">@color/default_lineColor</item>
@@ -44,45 +44,45 @@
         <item name="backgroundColorHighlighted">@color/default_backgroundColorHighlighted</item>
 	</style>
 
-	<style name="Theme.Light">
-		<item name="lineColor">@color/light_lineColor</item>
-		<item name="sectorLineColor">@color/light_sectorLineColor</item>
-		<item name="textColor">@color/light_textColor</item>
-		<item name="textColorReadOnly">@color/light_textColorReadOnly</item>
-		<item name="textColorNote">@color/light_textColorNote</item>
-        <item name="backgroundColor">@color/light_backgroundColor</item>
-        <item name="backgroundColorSecondary">@color/light_backgroundColorSecondary</item>
-        <item name="backgroundColorReadOnly">@color/light_backgroundColorReadOnly</item>
-        <item name="backgroundColorTouched">@color/light_backgroundColorTouched</item>
-        <item name="backgroundColorSelected">@color/light_backgroundColorSelected</item>
-        <item name="backgroundColorHighlighted">@color/light_backgroundColorHighlighted</item>
+	<style name="Theme.Dark">
+		<item name="lineColor">@color/dark_lineColor</item>
+		<item name="sectorLineColor">@color/dark_sectorLineColor</item>
+		<item name="textColor">@color/dark_textColor</item>
+		<item name="textColorReadOnly">@color/dark_textColorReadOnly</item>
+		<item name="textColorNote">@color/dark_textColorNote</item>
+        <item name="backgroundColor">@color/dark_backgroundColor</item>
+        <item name="backgroundColorSecondary">@color/dark_backgroundColorSecondary</item>
+        <item name="backgroundColorReadOnly">@color/dark_backgroundColorReadOnly</item>
+        <item name="backgroundColorTouched">@color/dark_backgroundColorTouched</item>
+        <item name="backgroundColorSelected">@color/dark_backgroundColorSelected</item>
+        <item name="backgroundColorHighlighted">@color/dark_backgroundColorHighlighted</item>
 	</style>
 
-	<style name="Theme.PaperLight">
-        <item name="lineColor">@color/light_lineColor</item>
-        <item name="sectorLineColor">@color/light_sectorLineColor</item>
-        <item name="textColor">@color/light_textColor</item>
-        <item name="textColorReadOnly">@color/light_textColorReadOnly</item>
-        <item name="textColorNote">@color/light_textColorNote</item>
-        <item name="backgroundColor">@color/light_backgroundColor</item>
-        <item name="backgroundColorSecondary">@color/light_backgroundColor</item>
-        <item name="backgroundColorReadOnly">@color/light_backgroundColor</item>
-        <item name="backgroundColorTouched">@color/light_backgroundColorTouched</item>
-        <item name="backgroundColorSelected">@color/light_backgroundColorSelected</item>
-        <item name="backgroundColorHighlighted">@color/light_backgroundColorHighlighted</item>
+	<style name="Theme.PaperDark">
+        <item name="lineColor">@color/dark_lineColor</item>
+        <item name="sectorLineColor">@color/dark_sectorLineColor</item>
+        <item name="textColor">@color/dark_textColor</item>
+        <item name="textColorReadOnly">@color/dark_textColorReadOnly</item>
+        <item name="textColorNote">@color/dark_textColorNote</item>
+        <item name="backgroundColor">@color/dark_backgroundColor</item>
+        <item name="backgroundColorSecondary">@color/dark_backgroundColor</item>
+        <item name="backgroundColorReadOnly">@color/dark_backgroundColor</item>
+        <item name="backgroundColorTouched">@color/dark_backgroundColorTouched</item>
+        <item name="backgroundColorSelected">@color/dark_backgroundColorSelected</item>
+        <item name="backgroundColorHighlighted">@color/dark_backgroundColorHighlighted</item>
 	</style>
 
-	<style name="Theme.GraphPaperLight">
-        <item name="lineColor">@color/light_lineColor</item>
-        <item name="sectorLineColor">@color/light_sectorLineColor</item>
-        <item name="textColor">@color/light_textColor</item>
-        <item name="textColorReadOnly">@color/light_textColorReadOnly</item>
-        <item name="textColorNote">@color/light_textColorNote</item>
-        <item name="backgroundColor">@color/light_backgroundColorReadOnly</item>
-        <item name="backgroundColorSecondary">@color/light_backgroundColor</item>
-        <item name="backgroundColorTouched">@color/light_backgroundColorTouched</item>
-        <item name="backgroundColorSelected">@color/light_backgroundColorSelected</item>
-        <item name="backgroundColorHighlighted">@color/light_backgroundColorHighlighted</item>
+	<style name="Theme.GraphPaperDark">
+        <item name="lineColor">@color/dark_lineColor</item>
+        <item name="sectorLineColor">@color/dark_sectorLineColor</item>
+        <item name="textColor">@color/dark_textColor</item>
+        <item name="textColorReadOnly">@color/dark_textColorReadOnly</item>
+        <item name="textColorNote">@color/dark_textColorNote</item>
+        <item name="backgroundColor">@color/dark_backgroundColorReadOnly</item>
+        <item name="backgroundColorSecondary">@color/dark_backgroundColor</item>
+        <item name="backgroundColorTouched">@color/dark_backgroundColorTouched</item>
+        <item name="backgroundColorSelected">@color/dark_backgroundColorSelected</item>
+        <item name="backgroundColorHighlighted">@color/dark_backgroundColorHighlighted</item>
 	</style>
 
     <style name="Theme.HighContrast">

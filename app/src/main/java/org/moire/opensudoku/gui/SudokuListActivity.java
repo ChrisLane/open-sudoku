@@ -20,49 +20,39 @@
 
 package org.moire.opensudoku.gui;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.TextView;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.db.SudokuColumns;
 import org.moire.opensudoku.db.SudokuDatabase;
-import org.moire.opensudoku.game.FolderInfo;
 import org.moire.opensudoku.game.CellCollection;
+import org.moire.opensudoku.game.FolderInfo;
 import org.moire.opensudoku.game.SudokuGame;
-import org.moire.opensudoku.gui.FolderDetailLoader.FolderDetailCallback;
 import org.moire.opensudoku.utils.AndroidUtils;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * List of puzzles in folder.
  *
  * @author romario
  */
-public class SudokuListActivity extends ListActivity {
+public class SudokuListActivity extends AppCompatActivity {
 
 	public static final String EXTRA_FOLDER_ID = "folder_id";
 
@@ -97,6 +87,7 @@ public class SudokuListActivity extends ListActivity {
 	private SudokuListFilter mListFilter;
 
 	private TextView mFilterStatus;
+	private ListView mSudokuListView;
 
 	private SimpleCursorAdapter mAdapter;
 	private Cursor mCursor;
@@ -111,9 +102,12 @@ public class SudokuListActivity extends ListActivity {
 		AndroidUtils.setThemeFromPreferences(this);
 
 		setContentView(R.layout.sudoku_list);
-		mFilterStatus = (TextView) findViewById(R.id.filter_status);
+		mFilterStatus = findViewById(R.id.filter_status);
 
-		getListView().setOnCreateContextMenuListener(this);
+		mSudokuListView = findViewById(R.id.sudoku_list);
+		mSudokuListView.setOnItemClickListener(this::onListItemClick);
+		mSudokuListView.setOnCreateContextMenuListener(this);
+
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 
 		mDatabase = new SudokuDatabase(getApplicationContext());
@@ -142,7 +136,7 @@ public class SudokuListActivity extends ListActivity {
 						R.id.last_played, R.id.created, R.id.note});
 		mAdapter.setViewBinder(new SudokuListViewBinder(this));
 		updateList();
-		setListAdapter(mAdapter);
+		mSudokuListView.setAdapter(mAdapter);
 	}
 
 	@Override
@@ -235,47 +229,38 @@ public class SudokuListActivity extends ListActivity {
 						R.drawable.ic_delete).setTitle("Puzzle").setMessage(
 						R.string.delete_puzzle_confirm)
 						.setPositiveButton(android.R.string.yes,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-														int whichButton) {
-										mDatabase.deleteSudoku(mDeletePuzzleID);
-										updateList();
-									}
+								(dialog, whichButton) -> {
+									mDatabase.deleteSudoku(mDeletePuzzleID);
+									updateList();
 								}).setNegativeButton(android.R.string.no, null).create();
 			case DIALOG_EDIT_NOTE:
 
 				LayoutInflater factory = LayoutInflater.from(this);
 				final View noteView = factory.inflate(R.layout.sudoku_list_item_note,
 						null);
-				mEditNoteInput = (TextView) noteView.findViewById(R.id.note);
+				mEditNoteInput = noteView.findViewById(R.id.note);
 				return new AlertDialog.Builder(this).setIcon(
 						R.drawable.ic_add).setTitle(R.string.edit_note)
 						.setView(noteView).setPositiveButton(R.string.save,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-														int whichButton) {
-										SudokuGame game = mDatabase.getSudoku(mEditNotePuzzleID);
-										game.setNote(mEditNoteInput.getText()
-												.toString());
-										mDatabase.updateSudoku(game);
-										updateList();
-									}
+								(dialog, whichButton) -> {
+									SudokuGame game = mDatabase.getSudoku(mEditNotePuzzleID);
+									game.setNote(mEditNoteInput.getText()
+											.toString());
+									mDatabase.updateSudoku(game);
+									updateList();
 								}).setNegativeButton(android.R.string.cancel, null).create();
 			case DIALOG_RESET_PUZZLE:
 				return new AlertDialog.Builder(this).setIcon(
 						R.drawable.ic_restore).setTitle("Puzzle")
 						.setMessage(R.string.reset_puzzle_confirm)
 						.setPositiveButton(android.R.string.yes,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-														int whichButton) {
-										SudokuGame game = mDatabase.getSudoku(mResetPuzzleID);
-										if (game != null) {
-											game.reset();
-											mDatabase.updateSudoku(game);
-										}
-										updateList();
+								(dialog, whichButton) -> {
+									SudokuGame game = mDatabase.getSudoku(mResetPuzzleID);
+									if (game != null) {
+										game.reset();
+										mDatabase.updateSudoku(game);
 									}
+									updateList();
 								}).setNegativeButton(android.R.string.no, null).create();
 			case DIALOG_FILTER:
 				return new AlertDialog.Builder(this)
@@ -288,37 +273,30 @@ public class SudokuListActivity extends ListActivity {
 										mListFilter.showStatePlaying,
 										mListFilter.showStateCompleted,
 								},
-								new DialogInterface.OnMultiChoiceClickListener() {
-									public void onClick(DialogInterface dialog, int whichButton,
-														boolean isChecked) {
-										switch (whichButton) {
-											case 0:
-												mListFilter.showStateNotStarted = isChecked;
-												break;
-											case 1:
-												mListFilter.showStatePlaying = isChecked;
-												break;
-											case 2:
-												mListFilter.showStateCompleted = isChecked;
-												break;
-										}
+								(dialog, whichButton, isChecked) -> {
+									switch (whichButton) {
+										case 0:
+											mListFilter.showStateNotStarted = isChecked;
+											break;
+										case 1:
+											mListFilter.showStatePlaying = isChecked;
+											break;
+										case 2:
+											mListFilter.showStateCompleted = isChecked;
+											break;
 									}
 								})
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								settings.edit()
-										.putBoolean(FILTER_STATE_NOT_STARTED, mListFilter.showStateNotStarted)
-										.putBoolean(FILTER_STATE_PLAYING, mListFilter.showStatePlaying)
-										.putBoolean(FILTER_STATE_SOLVED, mListFilter.showStateCompleted)
-										.commit();
-								updateList();
-							}
+						.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+							settings.edit()
+									.putBoolean(FILTER_STATE_NOT_STARTED, mListFilter.showStateNotStarted)
+									.putBoolean(FILTER_STATE_PLAYING, mListFilter.showStatePlaying)
+									.putBoolean(FILTER_STATE_SOLVED, mListFilter.showStateCompleted)
+									.apply();
+							updateList();
 						})
-						.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
+						.setNegativeButton(android.R.string.cancel, (dialog, whichButton) -> {
 
-								/* User clicked No so do some stuff */
-							}
+							/* User clicked No so do some stuff */
 						}).create();
 		}
 		return null;
@@ -349,7 +327,7 @@ public class SudokuListActivity extends ListActivity {
 			return;
 		}
 
-		Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+		Cursor cursor = (Cursor) mSudokuListView.getAdapter().getItem(info.position);
 		if (cursor == null) {
 			// For some reason the requested item isn't available, do nothing
 			return;
@@ -430,8 +408,7 @@ public class SudokuListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		playSudoku(id);
 	}
 
@@ -464,12 +441,9 @@ public class SudokuListActivity extends ListActivity {
 		FolderInfo folder = mDatabase.getFolderInfo(mFolderID);
 		setTitle(folder.name);
 
-		mFolderDetailLoader.loadDetailAsync(mFolderID, new FolderDetailCallback() {
-			@Override
-			public void onLoaded(FolderInfo folderInfo) {
-				if (folderInfo != null)
-					setTitle(folderInfo.name + " - " + folderInfo.getDetail(getApplicationContext()));
-			}
+		mFolderDetailLoader.loadDetailAsync(mFolderID, folderInfo -> {
+			if (folderInfo != null)
+				setTitle(folderInfo.name + " - " + folderInfo.getDetail(getApplicationContext()));
 		});
 	}
 
@@ -533,7 +507,7 @@ public class SudokuListActivity extends ListActivity {
 						// TODO: read colors from android resources
 						label.setTextColor(Color.rgb(150, 150, 150));
 					} else {
-						label.setTextColor(Color.rgb(255, 255, 255));
+						label.setTextColor(Color.rgb(0, 0, 0));
 						//label.setTextColor(SudokuListActivity.this.getResources().getColor(R.));
 					}
 					break;
@@ -583,7 +557,7 @@ public class SudokuListActivity extends ListActivity {
 					String note = c.getString(columnIndex);
 					label = ((TextView) view);
 					if (note == null || note.trim() == "") {
-						((TextView) view).setVisibility(View.GONE);
+						view.setVisibility(View.GONE);
 					} else {
 						((TextView) view).setText(note);
 					}

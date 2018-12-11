@@ -20,14 +20,6 @@
 
 package org.moire.opensudoku.gui;
 
-import java.util.Collection;
-
-import org.moire.opensudoku.R;
-import org.moire.opensudoku.game.Cell;
-import org.moire.opensudoku.game.CellCollection;
-import org.moire.opensudoku.game.CellNote;
-import org.moire.opensudoku.game.SudokuGame;
-import org.moire.opensudoku.game.CellCollection.OnChangeListener;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -37,6 +29,13 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import org.moire.opensudoku.R;
+import org.moire.opensudoku.game.Cell;
+import org.moire.opensudoku.game.CellCollection;
+import org.moire.opensudoku.game.CellNote;
+import org.moire.opensudoku.game.SudokuGame;
+
+import java.util.Collection;
 
 /**
  * Sudoku board widget.
@@ -232,12 +231,7 @@ public class SudokuBoardView extends View {
 				onCellSelected(mSelectedCell);
 			}
 
-			mCells.addOnChangeListener(new OnChangeListener() {
-				@Override
-				public void onChange() {
-					postInvalidate();
-				}
-			});
+			mCells.addOnChangeListener(this::postInvalidate);
 		}
 
 		postInvalidate();

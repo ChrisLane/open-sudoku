@@ -75,7 +75,7 @@ public class CellCollection {
 
 	private boolean mOnChangeEnabled = true;
 
-	private final List<OnChangeListener> mChangeListeners = new ArrayList<OnChangeListener>();
+	private final List<OnChangeListener> mChangeListeners = new ArrayList<>();
 
 	/**
 	 * Creates empty sudoku.
@@ -265,7 +265,7 @@ public class CellCollection {
 	 * @return
 	 */
 	public Map<Integer, Integer> getValuesUseCount() {
-		Map<Integer, Integer> valuesUseCount = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> valuesUseCount = new HashMap<>();
 		for (int value = 1; value <= CellCollection.SUDOKU_SIZE; value++) {
 			valuesUseCount.put(value, 0);
 		}

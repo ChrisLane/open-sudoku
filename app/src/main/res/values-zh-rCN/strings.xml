@@ -24,7 +24,7 @@
     <string name="one_puzzle">1 谜题</string>
     <string name="n_puzzles">%d 谜题</string>
     <string name="all_solved">全部已解决</string>
-    <string name="n_solved">%s 已解决</string>
+    <string name="n_solved">%d 已解决</string>
     <string name="n_unsolved">%d 未解决</string>
     <string name="n_playing">%d 解题中</string>
     <string name="solved">已解决</string>
@@ -145,11 +145,11 @@
     <string name="undo_to_checkpoint_confirm">你确定想撤销从上次检查点开始的所有操作ma</string>
     <string name="localization_contributors_label">本地化贡献者</string>
     <string name="fill_in_notes_summary">启用填充提示菜单项。</string>
-    <string name="theme_light">亮</string>
+    <string name="theme_dark">亮</string>
     <string name="theme_paper">纸</string>
     <string name="theme_graph_paper">图纸</string>
-    <string name="theme_paper_light">纸亮</string>
-    <string name="theme_graph_paper_light">图纸亮</string>
+    <string name="theme_paper_dark">纸亮</string>
+    <string name="theme_graph_paper_dark">图纸亮</string>
     <string name="theme_high_contrast">高对比度</string>
     <string name="theme_inverted_high_contrast">反向高对比度</string>
     <string name="screen_custom_theme_summary">自定义自定义主题的颜色</string>

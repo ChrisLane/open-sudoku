@@ -20,13 +20,12 @@
 
 package org.moire.opensudoku.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
-
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SudokuListFilter {
 
@@ -42,7 +41,7 @@ public class SudokuListFilter {
 
 	@Override
 	public String toString() {
-		List<String> visibleStates = new ArrayList<String>();
+		List<String> visibleStates = new ArrayList<>();
 		if (showStateNotStarted) {
 			visibleStates.add(mContext.getString(R.string.not_started));
 		}

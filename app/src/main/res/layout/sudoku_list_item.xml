@@ -10,23 +10,23 @@
         android:id="@+id/sudoku_board"
         android:layout_width="100sp"
         android:layout_height="100sp"
-        android:layout_marginRight="6dp"/>
+        android:layout_marginEnd="6dp"/>
 
     <TextView
-        android:id="@+id/state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/sudoku_board"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="State" />
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/sudoku_board"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="State"/>
 
     <TextView
         android:id="@+id/time"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/state"
+        android:layout_toEndOf="@+id/state"
         android:gravity="right"
-        android:layout_marginLeft="8sp"
+        android:layout_marginStart="8sp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="00:00" />
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/state"
-        android:layout_toRightOf="@+id/sudoku_board"
+        android:layout_toEndOf="@+id/sudoku_board"
         android:layout_marginTop="4sp"
         android:text="last_played" />
 
@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/last_played"
-        android:layout_toRightOf="@+id/sudoku_board"
+        android:layout_toEndOf="@+id/sudoku_board"
         android:layout_marginTop="4sp"
         android:text="created" />
 
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/created"
-        android:layout_toRightOf="@+id/sudoku_board"
+        android:layout_toEndOf="@+id/sudoku_board"
         android:layout_marginTop="4sp"
         android:text="note" />
 

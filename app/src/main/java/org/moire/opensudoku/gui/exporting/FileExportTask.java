@@ -1,13 +1,5 @@
 package org.moire.opensudoku.gui.exporting;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-
-import org.xmlpull.v1.XmlSerializer;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -17,6 +9,9 @@ import android.util.Xml;
 import org.moire.opensudoku.db.SudokuColumns;
 import org.moire.opensudoku.db.SudokuDatabase;
 import org.moire.opensudoku.utils.Const;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.*;
 
 /**
  * Must be created on GUI thread.
@@ -48,15 +43,11 @@ public class FileExportTask extends AsyncTask<FileExportTaskParams, Integer, Voi
 		for (FileExportTaskParams par : params) {
 			final FileExportTaskResult res = saveToFile(par);
 
-			mGuiHandler.post(new Runnable() {
-
-				@Override
-				public void run() {
-					if (mOnExportFinishedListener != null) {
-						mOnExportFinishedListener.onExportFinished(res);
-					}
-
+			mGuiHandler.post(() -> {
+				if (mOnExportFinishedListener != null) {
+					mOnExportFinishedListener.onExportFinished(res);
 				}
+
 			});
 		}
 

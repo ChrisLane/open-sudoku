@@ -20,38 +20,32 @@
 
 package org.moire.opensudoku.gui;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import org.moire.opensudoku.R;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.util.*;
+
 /**
  * List folders.
  *
  * @author dracula
  */
-public class FileListActivity extends ListActivity {
+public class FileListActivity extends AppCompatActivity {
 	private static final int DIALOG_IMPORT_FILE = 0;
 
 	public static final String EXTRA_FOLDER_NAME = "FOLDER_NAME";
@@ -74,38 +68,31 @@ public class FileListActivity extends ListActivity {
 
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		// Inform the list we provide context menus for items
-		getListView().setOnCreateContextMenuListener(this);
+		ListView listView = findViewById(R.id.file_list);
+		listView.setOnItemClickListener(this::onListItemClick);
 
 		Intent intent = getIntent();
 		String mDirectory = intent.getStringExtra(EXTRA_FOLDER_NAME);
 		File selected_dir = new File(mDirectory);
 
-		File[] dirs = selected_dir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.isDirectory() && !pathname.isHidden() && pathname.canRead();
-			}
-		});
+		File[] dirs = selected_dir.listFiles(pathname -> pathname.isDirectory() && !pathname.isHidden() && pathname.canRead());
 
-		File[] files = selected_dir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.isFile() && !pathname.isHidden() && pathname.canRead() && (pathname.getName().endsWith(".opensudoku") || pathname.getName().endsWith(".sdm"));
-			}
-		});
+		File[] files = selected_dir.listFiles(pathname -> pathname.isFile() && !pathname.isHidden()
+				&& pathname.canRead() && (pathname.getName().endsWith(".opensudoku")
+				|| pathname.getName().endsWith(".sdm")));
 
 		Arrays.sort(dirs);
 		Arrays.sort(files);
 
-		mList = new ArrayList<Map<String, Object>>();
+		mList = new ArrayList<>();
 		if (selected_dir.getParentFile() != null) {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<>();
 			map.put(ITEM_KEY_FILE, selected_dir.getParentFile());
 			map.put(ITEM_KEY_NAME, "build/source/rs");
 			mList.add(map);
 		}
 		for (File f : dirs) {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<>();
 			map.put(ITEM_KEY_FILE, f);
 			map.put(ITEM_KEY_NAME, f.getName());
 			mList.add(map);
@@ -113,7 +100,7 @@ public class FileListActivity extends ListActivity {
 		DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
 		DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(this);
 		for (File f : files) {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<>();
 			map.put(ITEM_KEY_FILE, f);
 			map.put(ITEM_KEY_NAME, f.getName());
 			Date date = new Date(f.lastModified());
@@ -123,9 +110,9 @@ public class FileListActivity extends ListActivity {
 		String[] from = {ITEM_KEY_NAME, ITEM_KEY_DETAIL};
 		int[] to = {R.id.name, R.id.detail};
 
-		SimpleAdapter adapter = new SimpleAdapter(this, (List<? extends Map<String, ?>>) mList, R.layout.folder_list_item, from, to);
+		SimpleAdapter adapter = new SimpleAdapter(this, mList, R.layout.folder_list_item, from, to);
 		adapter.setViewBinder(new FileListViewBinder());
-		setListAdapter(adapter);
+		listView.setAdapter(adapter);
 	}
 
 	@Override
@@ -155,24 +142,21 @@ public class FileListActivity extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(final int id) {
 		LayoutInflater.from(this);
-		switch (id) {
-			case DIALOG_IMPORT_FILE:
-				return new AlertDialog.Builder(this)
-						.setIcon(R.drawable.ic_cloud_upload)
-						.setTitle(R.string.import_file)
-						.setPositiveButton(R.string.import_file, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								//importovani
-								File f = mSelectedFile;
-								Intent i = new Intent(mContext, ImportSudokuActivity.class);
-								Uri u = Uri.fromFile(f);
-								i.setData(u);
-								startActivity(i);
-								//finish();
-							}
-						})
-						.setNegativeButton(android.R.string.cancel, null)
-						.create();
+		if (id == DIALOG_IMPORT_FILE) {
+			return new AlertDialog.Builder(this)
+					.setIcon(R.drawable.ic_cloud_upload)
+					.setTitle(R.string.import_file)
+					.setPositiveButton(R.string.import_file, (dialog, whichButton) -> {
+						//importovani
+						File f = mSelectedFile;
+						Intent i = new Intent(mContext, ImportSudokuActivity.class);
+						Uri u = Uri.fromFile(f);
+						i.setData(u);
+						startActivity(i);
+						//finish();
+					})
+					.setNegativeButton(android.R.string.cancel, null)
+					.create();
 		}
 
 		return null;
@@ -189,8 +173,7 @@ public class FileListActivity extends ListActivity {
 		}
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		File f = (File) (mList.get((int) id).get(ITEM_KEY_FILE));
 		if (f.isFile()) {
 			mSelectedFile = f;
@@ -209,13 +192,12 @@ public class FileListActivity extends ListActivity {
 		@Override
 		public boolean setViewValue(View view, Object data,
 									String textRepresentation) {
-			switch (view.getId()) {
-				case R.id.detail:
-					if (data == null) {
-						final TextView detailView = (TextView) view;
-						detailView.setVisibility(View.INVISIBLE);
-						return true;
-					}
+			if (view.getId() == R.id.detail) {
+				if (data == null) {
+					final TextView detailView = (TextView) view;
+					detailView.setVisibility(View.INVISIBLE);
+					return true;
+				}
 			}
 			return false;
 		}

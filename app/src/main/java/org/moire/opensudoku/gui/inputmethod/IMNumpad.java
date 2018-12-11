@@ -20,9 +20,6 @@
 
 package org.moire.opensudoku.gui.inputmethod;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
@@ -33,12 +30,15 @@ import android.widget.ImageButton;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.game.Cell;
 import org.moire.opensudoku.game.CellCollection;
+import org.moire.opensudoku.game.CellCollection.OnChangeListener;
 import org.moire.opensudoku.game.CellNote;
 import org.moire.opensudoku.game.SudokuGame;
-import org.moire.opensudoku.game.CellCollection.OnChangeListener;
 import org.moire.opensudoku.gui.HintsQueue;
 import org.moire.opensudoku.gui.SudokuBoardView;
 import org.moire.opensudoku.gui.inputmethod.IMControlPanelStatePersister.StateBundle;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class IMNumpad extends InputMethod {
 
@@ -99,17 +99,17 @@ public class IMNumpad extends InputMethod {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View controlPanel = inflater.inflate(R.layout.im_numpad, null);
 
-		mNumberButtons = new HashMap<Integer, Button>();
-		mNumberButtons.put(1, (Button) controlPanel.findViewById(R.id.button_1));
-		mNumberButtons.put(2, (Button) controlPanel.findViewById(R.id.button_2));
-		mNumberButtons.put(3, (Button) controlPanel.findViewById(R.id.button_3));
-		mNumberButtons.put(4, (Button) controlPanel.findViewById(R.id.button_4));
-		mNumberButtons.put(5, (Button) controlPanel.findViewById(R.id.button_5));
-		mNumberButtons.put(6, (Button) controlPanel.findViewById(R.id.button_6));
-		mNumberButtons.put(7, (Button) controlPanel.findViewById(R.id.button_7));
-		mNumberButtons.put(8, (Button) controlPanel.findViewById(R.id.button_8));
-		mNumberButtons.put(9, (Button) controlPanel.findViewById(R.id.button_9));
-		mNumberButtons.put(0, (Button) controlPanel.findViewById(R.id.button_clear));
+		mNumberButtons = new HashMap<>();
+		mNumberButtons.put(1, controlPanel.findViewById(R.id.button_1));
+		mNumberButtons.put(2, controlPanel.findViewById(R.id.button_2));
+		mNumberButtons.put(3, controlPanel.findViewById(R.id.button_3));
+		mNumberButtons.put(4, controlPanel.findViewById(R.id.button_4));
+		mNumberButtons.put(5, controlPanel.findViewById(R.id.button_5));
+		mNumberButtons.put(6, controlPanel.findViewById(R.id.button_6));
+		mNumberButtons.put(7, controlPanel.findViewById(R.id.button_7));
+		mNumberButtons.put(8, controlPanel.findViewById(R.id.button_8));
+		mNumberButtons.put(9, controlPanel.findViewById(R.id.button_9));
+		mNumberButtons.put(0, controlPanel.findViewById(R.id.button_clear));
 
 		for (Integer num : mNumberButtons.keySet()) {
 			Button b = mNumberButtons.get(num);
@@ -117,15 +117,10 @@ public class IMNumpad extends InputMethod {
 			b.setOnClickListener(mNumberButtonClick);
 		}
 
-		mSwitchNumNoteButton = (ImageButton) controlPanel.findViewById(R.id.switch_num_note);
-		mSwitchNumNoteButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mEditMode = mEditMode == MODE_EDIT_VALUE ? MODE_EDIT_NOTE : MODE_EDIT_VALUE;
-				update();
-			}
-
+		mSwitchNumNoteButton = controlPanel.findViewById(R.id.switch_num_note);
+		mSwitchNumNoteButton.setOnClickListener(v -> {
+			mEditMode = mEditMode == MODE_EDIT_VALUE ? MODE_EDIT_NOTE : MODE_EDIT_VALUE;
+			update();
 		});
 
 		return controlPanel;
@@ -189,13 +184,9 @@ public class IMNumpad extends InputMethod {
 
 	};
 
-	private OnChangeListener mOnCellsChangeListener = new OnChangeListener() {
-
-		@Override
-		public void onChange() {
-			if (mActive) {
-				update();
-			}
+	private OnChangeListener mOnCellsChangeListener = () -> {
+		if (mActive) {
+			update();
 		}
 	};
 

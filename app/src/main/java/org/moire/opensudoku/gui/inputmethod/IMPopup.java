@@ -20,10 +20,7 @@
 
 package org.moire.opensudoku.gui.inputmethod;
 
-import java.util.Map;
-
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +30,8 @@ import org.moire.opensudoku.game.CellCollection;
 import org.moire.opensudoku.game.CellNote;
 import org.moire.opensudoku.gui.inputmethod.IMPopupDialog.OnNoteEditListener;
 import org.moire.opensudoku.gui.inputmethod.IMPopupDialog.OnNumberEditListener;
+
+import java.util.Map;
 
 public class IMPopup extends InputMethod {
 
@@ -175,12 +174,6 @@ public class IMPopup extends InputMethod {
 	/**
 	 * Occurs when popup dialog is closed.
 	 */
-	private OnDismissListener mOnPopupDismissedListener = new OnDismissListener() {
-
-		@Override
-		public void onDismiss(DialogInterface dialog) {
-			mBoard.hideTouchedCellHint();
-		}
-	};
+	private OnDismissListener mOnPopupDismissedListener = dialog -> mBoard.hideTouchedCellHint();
 
 }

@@ -20,14 +20,14 @@
 
 package org.moire.opensudoku.gui;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import org.moire.opensudoku.db.SudokuDatabase;
 import org.moire.opensudoku.game.FolderInfo;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Loads details of given folders on one single background thread.
@@ -57,22 +57,14 @@ public class FolderDetailLoader {
 	public void loadDetailAsync(long folderID, FolderDetailCallback loadedCallback) {
 		final long folderIDFinal = folderID;
 		final FolderDetailCallback loadedCallbackFinal = loadedCallback;
-		mLoaderService.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					final FolderInfo folderInfo = mDatabase.getFolderInfoFull(folderIDFinal);
+		mLoaderService.execute(() -> {
+			try {
+				final FolderInfo folderInfo = mDatabase.getFolderInfoFull(folderIDFinal);
 
-					mGuiHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							loadedCallbackFinal.onLoaded(folderInfo);
-						}
-					});
-				} catch (Exception e) {
-					// this is some unimportant background stuff, do not fail
-					Log.e(TAG, "Error occured while loading full folder info.", e);
-				}
+				mGuiHandler.post(() -> loadedCallbackFinal.onLoaded(folderInfo));
+			} catch (Exception e) {
+				// this is some unimportant background stuff, do not fail
+				Log.e(TAG, "Error occured while loading full folder info.", e);
 			}
 		});
 	}

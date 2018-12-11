@@ -20,30 +20,18 @@
 
 package org.moire.opensudoku.gui.inputmethod;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout.LayoutParams;
 import org.moire.opensudoku.R;
+
+import java.util.*;
 
 public class IMPopupDialog extends Dialog {
 
@@ -52,14 +40,14 @@ public class IMPopupDialog extends Dialog {
 	private TabHost mTabHost;
 
 	// buttons from "Select number" tab
-	private Map<Integer, Button> mNumberButtons = new HashMap<Integer, Button>();
+	private Map<Integer, Button> mNumberButtons = new HashMap<>();
 	// buttons from "Edit note" tab
-	private Map<Integer, ToggleButton> mNoteNumberButtons = new HashMap<Integer, ToggleButton>();
+	private Map<Integer, ToggleButton> mNoteNumberButtons = new HashMap<>();
 
 	// selected number on "Select number" tab (0 if nothing is selected).
 	private int mSelectedNumber;
 	// selected numbers on "Edit note" tab
-	private Set<Integer> mNoteSelectedNumbers = new HashSet<Integer>();
+	private Set<Integer> mNoteSelectedNumbers = new HashSet<>();
 
 	private OnNumberEditListener mOnNumberEditListener;
 	private OnNoteEditListener mOnNoteEditListener;
@@ -72,8 +60,8 @@ public class IMPopupDialog extends Dialog {
 		mTabHost = createTabView();
 
 		// hide dialog's title
-		TextView title = (TextView) findViewById(android.R.id.title);
-		title.setVisibility(View.GONE);
+		//TextView title = (TextView) findViewById(android.R.id.title);
+		//title.setVisibility(View.GONE);
 
 		setContentView(mTabHost);
 	}
@@ -142,12 +130,10 @@ public class IMPopupDialog extends Dialog {
 	 * @param numbers
 	 */
 	public void updateNote(Collection<Integer> numbers) {
-		mNoteSelectedNumbers = new HashSet<Integer>();
+		mNoteSelectedNumbers = new HashSet<>();
 
 		if (numbers != null) {
-			for (int number : numbers) {
-				mNoteSelectedNumbers.add(number);
-			}
+			mNoteSelectedNumbers.addAll(numbers);
 		}
 
 		for (Integer number : mNoteNumberButtons.keySet()) {
@@ -226,24 +212,10 @@ public class IMPopupDialog extends Dialog {
 
 		tabHost.addTab(tabHost.newTabSpec("number")
 				.setIndicator(mContext.getString(R.string.select_number))
-				.setContent(new TabHost.TabContentFactory() {
-
-					@Override
-					public View createTabContent(String tag) {
-						return editNumberView;
-					}
-
-				}));
+				.setContent(tag -> editNumberView));
 		tabHost.addTab(tabHost.newTabSpec("note")
 				.setIndicator(mContext.getString(R.string.edit_note))
-				.setContent(new TabHost.TabContentFactory() {
-
-					@Override
-					public View createTabContent(String tag) {
-						return editNoteView;
-					}
-
-				}));
+				.setContent(tag -> editNoteView));
 
 		return tabHost;
 	}
@@ -256,15 +228,15 @@ public class IMPopupDialog extends Dialog {
 	private View createEditNumberView() {
 		View v = mInflater.inflate(R.layout.im_popup_edit_value, null);
 
-		mNumberButtons.put(1, (Button) v.findViewById(R.id.button_1));
-		mNumberButtons.put(2, (Button) v.findViewById(R.id.button_2));
-		mNumberButtons.put(3, (Button) v.findViewById(R.id.button_3));
-		mNumberButtons.put(4, (Button) v.findViewById(R.id.button_4));
-		mNumberButtons.put(5, (Button) v.findViewById(R.id.button_5));
-		mNumberButtons.put(6, (Button) v.findViewById(R.id.button_6));
-		mNumberButtons.put(7, (Button) v.findViewById(R.id.button_7));
-		mNumberButtons.put(8, (Button) v.findViewById(R.id.button_8));
-		mNumberButtons.put(9, (Button) v.findViewById(R.id.button_9));
+		mNumberButtons.put(1, v.findViewById(R.id.button_1));
+		mNumberButtons.put(2, v.findViewById(R.id.button_2));
+		mNumberButtons.put(3, v.findViewById(R.id.button_3));
+		mNumberButtons.put(4, v.findViewById(R.id.button_4));
+		mNumberButtons.put(5, v.findViewById(R.id.button_5));
+		mNumberButtons.put(6, v.findViewById(R.id.button_6));
+		mNumberButtons.put(7, v.findViewById(R.id.button_7));
+		mNumberButtons.put(8, v.findViewById(R.id.button_8));
+		mNumberButtons.put(9, v.findViewById(R.id.button_9));
 
 		for (Integer num : mNumberButtons.keySet()) {
 			Button b = mNumberButtons.get(num);
@@ -272,9 +244,9 @@ public class IMPopupDialog extends Dialog {
 			b.setOnClickListener(editNumberButtonClickListener);
 		}
 
-		Button closeButton = (Button) v.findViewById(R.id.button_close);
+		Button closeButton = v.findViewById(R.id.button_close);
 		closeButton.setOnClickListener(closeButtonListener);
-		Button clearButton = (Button) v.findViewById(R.id.button_clear);
+		Button clearButton = v.findViewById(R.id.button_clear);
 		clearButton.setOnClickListener(clearButtonListener);
 
 		return v;
@@ -289,15 +261,15 @@ public class IMPopupDialog extends Dialog {
 	private View createEditNoteView() {
 		View v = mInflater.inflate(R.layout.im_popup_edit_note, null);
 
-		mNoteNumberButtons.put(1, (ToggleButton) v.findViewById(R.id.button_1));
-		mNoteNumberButtons.put(2, (ToggleButton) v.findViewById(R.id.button_2));
-		mNoteNumberButtons.put(3, (ToggleButton) v.findViewById(R.id.button_3));
-		mNoteNumberButtons.put(4, (ToggleButton) v.findViewById(R.id.button_4));
-		mNoteNumberButtons.put(5, (ToggleButton) v.findViewById(R.id.button_5));
-		mNoteNumberButtons.put(6, (ToggleButton) v.findViewById(R.id.button_6));
-		mNoteNumberButtons.put(7, (ToggleButton) v.findViewById(R.id.button_7));
-		mNoteNumberButtons.put(8, (ToggleButton) v.findViewById(R.id.button_8));
-		mNoteNumberButtons.put(9, (ToggleButton) v.findViewById(R.id.button_9));
+		mNoteNumberButtons.put(1, v.findViewById(R.id.button_1));
+		mNoteNumberButtons.put(2, v.findViewById(R.id.button_2));
+		mNoteNumberButtons.put(3, v.findViewById(R.id.button_3));
+		mNoteNumberButtons.put(4, v.findViewById(R.id.button_4));
+		mNoteNumberButtons.put(5, v.findViewById(R.id.button_5));
+		mNoteNumberButtons.put(6, v.findViewById(R.id.button_6));
+		mNoteNumberButtons.put(7, v.findViewById(R.id.button_7));
+		mNoteNumberButtons.put(8, v.findViewById(R.id.button_8));
+		mNoteNumberButtons.put(9, v.findViewById(R.id.button_9));
 
 		for (Integer num : mNoteNumberButtons.keySet()) {
 			ToggleButton b = mNoteNumberButtons.get(num);
@@ -305,9 +277,9 @@ public class IMPopupDialog extends Dialog {
 			b.setOnCheckedChangeListener(editNoteCheckedChangeListener);
 		}
 
-		Button closeButton = (Button) v.findViewById(R.id.button_close);
+		Button closeButton = v.findViewById(R.id.button_close);
 		closeButton.setOnClickListener(closeButtonListener);
-		Button clearButton = (Button) v.findViewById(R.id.button_clear);
+		Button clearButton = v.findViewById(R.id.button_clear);
 		clearButton.setOnClickListener(clearButtonListener);
 
 		return v;
@@ -332,19 +304,13 @@ public class IMPopupDialog extends Dialog {
 	/**
 	 * Occurs when user checks or unchecks number in "Edit note" tab.
 	 */
-	private OnCheckedChangeListener editNoteCheckedChangeListener = new OnCheckedChangeListener() {
-
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView,
-									 boolean isChecked) {
-			Integer number = (Integer) buttonView.getTag();
-			if (isChecked) {
-				mNoteSelectedNumbers.add(number);
-			} else {
-				mNoteSelectedNumbers.remove(number);
-			}
+	private OnCheckedChangeListener editNoteCheckedChangeListener = (buttonView, isChecked) -> {
+		Integer number = (Integer) buttonView.getTag();
+		if (isChecked) {
+			mNoteSelectedNumbers.add(number);
+		} else {
+			mNoteSelectedNumbers.remove(number);
 		}
-
 	};
 
 	/**

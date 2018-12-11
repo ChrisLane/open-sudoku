@@ -1,10 +1,5 @@
 package org.moire.opensudoku.gui;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +8,12 @@ import android.util.Log;
 import android.webkit.WebView;
 import org.moire.opensudoku.R;
 import org.moire.opensudoku.utils.AndroidUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 public class Changelog {
 
@@ -36,7 +37,7 @@ public class Changelog {
 
 			Editor editor = mPrefs.edit();
 			editor.putBoolean(versionKey, true);
-			editor.commit();
+			editor.apply();
 		}
 	}
 
@@ -64,7 +65,7 @@ public class Changelog {
 
 			final char[] buffer = new char[0x10000];
 			StringBuilder out = new StringBuilder();
-			Reader in = new InputStreamReader(is, "UTF-8");
+			Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
 			int read;
 			do {
 				read = in.read(buffer, 0, buffer.length);

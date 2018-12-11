@@ -53,12 +53,11 @@ public class CellGroup {
 	protected boolean validate() {
 		boolean valid = true;
 
-		Map<Integer, Cell> cellsByValue = new HashMap<Integer, Cell>();
-		for (int i = 0; i < mCells.length; i++) {
-			Cell cell = mCells[i];
+		Map<Integer, Cell> cellsByValue = new HashMap<>();
+		for (Cell cell : mCells) {
 			int value = cell.getValue();
 			if (cellsByValue.get(value) != null) {
-				mCells[i].setValid(false);
+				cell.setValid(false);
 				cellsByValue.get(value).setValid(false);
 				valid = false;
 			} else {
@@ -72,8 +71,8 @@ public class CellGroup {
 	}
 
 	public boolean contains(int value) {
-		for (int i = 0; i < mCells.length; i++) {
-			if (mCells[i].getValue() == value) {
+		for (Cell mCell : mCells) {
+			if (mCell.getValue() == value) {
 				return true;
 			}
 		}

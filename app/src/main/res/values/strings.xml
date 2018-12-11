@@ -48,7 +48,7 @@
 	<string name="one_puzzle">1 puzzle</string>
 	<string name="n_puzzles">%d puzzles</string>
 	<string name="all_solved">all solved</string>
-	<string name="n_solved">%s solved</string>
+	<string name="n_solved">%d solved</string>
 	<string name="n_unsolved">%d unsolved</string>
 	<string name="n_playing">%d playing</string>
 
@@ -232,9 +232,9 @@
     <string name="theme_default">Default</string>
     <string name="theme_paper">Paper</string>
     <string name="theme_graph_paper">Graph Paper</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_paper_light">Paper Light</string>
-    <string name="theme_graph_paper_light">Graph Paper Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_paper_dark">Paper Dark</string>
+    <string name="theme_graph_paper_dark">Graph Paper Dark</string>
     <string name="theme_high_contrast">High Contrast</string>
     <string name="theme_inverted_high_contrast">Inverted High Contrast</string>
 	<string name="theme_custom">Custom Theme</string>

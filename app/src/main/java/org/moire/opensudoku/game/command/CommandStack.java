@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 import org.moire.opensudoku.game.CellCollection;
 
 public class CommandStack {
-	private Stack<AbstractCommand> mCommandStack = new Stack<AbstractCommand>();
+	private Stack<AbstractCommand> mCommandStack = new Stack<>();
 
 	// TODO: I need cells collection, because I have to call validate on it after some
 	//	commands. CellCollection should be able to validate itself on change.
@@ -40,10 +40,9 @@ public class CommandStack {
 
     public void serialize(StringBuilder data) {
         data.append(mCommandStack.size()).append("|");
-        for (int i = 0; i < mCommandStack.size(); i++) {
-            AbstractCommand command = mCommandStack.get(i);
-            command.serialize(data);
-        }
+		for (AbstractCommand command : mCommandStack) {
+			command.serialize(data);
+		}
     }
 
 	public boolean empty() {

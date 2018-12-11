@@ -22,22 +22,16 @@ package org.moire.opensudoku.gui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -47,7 +41,6 @@ import org.moire.opensudoku.R;
 import org.moire.opensudoku.db.FolderColumns;
 import org.moire.opensudoku.db.SudokuDatabase;
 import org.moire.opensudoku.game.FolderInfo;
-import org.moire.opensudoku.gui.FolderDetailLoader.FolderDetailCallback;
 import org.moire.opensudoku.utils.AndroidUtils;
 
 /**
@@ -55,7 +48,7 @@ import org.moire.opensudoku.utils.AndroidUtils;
  *
  * @author romario
  */
-public class FolderListActivity extends ListActivity {
+public class FolderListActivity extends AppCompatActivity {
 
 	public static final int MENU_ITEM_ADD = Menu.FIRST;
 	public static final int MENU_ITEM_RENAME = Menu.FIRST + 1;
@@ -88,19 +81,17 @@ public class FolderListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.folder_list);
-		View getMorePuzzles = (View) findViewById(R.id.get_more_puzzles);
+		View getMorePuzzles = findViewById(R.id.get_more_puzzles);
 
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		// Inform the list we provide context menus for items
-		getListView().setOnCreateContextMenuListener(this);
+		ListView listView = findViewById(R.id.folder_list);
+		listView.setOnItemClickListener(this::onListItemClick);
 
-		getMorePuzzles.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://opensudoku.moire.org"));
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
-			}
+		getMorePuzzles.setOnClickListener(v -> {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://opensudoku.moire.org"));
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
 		});
 
 		mDatabase = new SudokuDatabase(getApplicationContext());
@@ -112,7 +103,7 @@ public class FolderListActivity extends ListActivity {
 		mFolderListBinder = new FolderListViewBinder(this);
 		adapter.setViewBinder(mFolderListBinder);
 
-		setListAdapter(adapter);
+		listView.setAdapter(adapter);
 
 		// show changelog on first run
 		Changelog changelog = new Changelog(this);
@@ -195,7 +186,8 @@ public class FolderListActivity extends ListActivity {
 			return;
 		}
 
-		Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+		ListView listView = findViewById(R.id.folder_list);
+		Cursor cursor = (Cursor) listView.getAdapter().getItem(info.position);
 		if (cursor == null) {
 			// For some reason the requested item isn't available, do nothing
 			return;
@@ -214,7 +206,7 @@ public class FolderListActivity extends ListActivity {
 		switch (id) {
 			case DIALOG_ABOUT:
 				final View aboutView = factory.inflate(R.layout.about, null);
-				TextView versionLabel = (TextView) aboutView.findViewById(R.id.version_label);
+				TextView versionLabel = aboutView.findViewById(R.id.version_label);
 				String versionName = AndroidUtils.getAppVersionName(getApplicationContext());
 				versionLabel.setText(getString(R.string.version, versionName));
 				return new AlertDialog.Builder(this)
@@ -225,32 +217,28 @@ public class FolderListActivity extends ListActivity {
 						.create();
 			case DIALOG_ADD_FOLDER:
 				View addFolderView = factory.inflate(R.layout.folder_name, null);
-				mAddFolderNameInput = (TextView) addFolderView.findViewById(R.id.name);
+				mAddFolderNameInput = addFolderView.findViewById(R.id.name);
 				return new AlertDialog.Builder(this)
 						.setIcon(R.drawable.ic_add)
 						.setTitle(R.string.add_folder)
 						.setView(addFolderView)
-						.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								mDatabase.insertFolder(mAddFolderNameInput.getText().toString().trim(), System.currentTimeMillis());
-								updateList();
-							}
+						.setPositiveButton(R.string.save, (dialog, whichButton) -> {
+							mDatabase.insertFolder(mAddFolderNameInput.getText().toString().trim(), System.currentTimeMillis());
+							updateList();
 						})
 						.setNegativeButton(android.R.string.cancel, null)
 						.create();
 			case DIALOG_RENAME_FOLDER:
 				final View renameFolderView = factory.inflate(R.layout.folder_name, null);
-				mRenameFolderNameInput = (TextView) renameFolderView.findViewById(R.id.name);
+				mRenameFolderNameInput = renameFolderView.findViewById(R.id.name);
 
 				return new AlertDialog.Builder(this)
 						.setIcon(R.drawable.ic_edit_grey)
 						.setTitle(R.string.rename_folder_title)
 						.setView(renameFolderView)
-						.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								mDatabase.updateFolder(mRenameFolderID, mRenameFolderNameInput.getText().toString().trim());
-								updateList();
-							}
+						.setPositiveButton(R.string.save, (dialog, whichButton) -> {
+							mDatabase.updateFolder(mRenameFolderID, mRenameFolderNameInput.getText().toString().trim());
+							updateList();
 						})
 						.setNegativeButton(android.R.string.cancel, null)
 						.create();
@@ -259,12 +247,10 @@ public class FolderListActivity extends ListActivity {
 						.setIcon(R.drawable.ic_delete)
 						.setTitle(R.string.delete_folder_title)
 						.setMessage(R.string.delete_folder_confirm)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								// TODO: this could take a while, I should show progress dialog
-								mDatabase.deleteFolder(mDeleteFolderID);
-								updateList();
-							}
+						.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+							// TODO: this could take a while, I should show progress dialog
+							mDatabase.deleteFolder(mDeleteFolderID);
+							updateList();
 						})
 						.setNegativeButton(android.R.string.no, null)
 						.create();
@@ -359,8 +345,7 @@ public class FolderListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	protected void onListItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Intent i = new Intent(this, SudokuListActivity.class);
 		i.putExtra(SudokuListActivity.EXTRA_FOLDER_ID, id);
 		startActivity(i);
@@ -391,12 +376,9 @@ public class FolderListActivity extends ListActivity {
 					final long folderID = c.getLong(columnIndex);
 					final TextView detailView = (TextView) view;
 					detailView.setText(mContext.getString(R.string.loading));
-					mDetailLoader.loadDetailAsync(folderID, new FolderDetailCallback() {
-						@Override
-						public void onLoaded(FolderInfo folderInfo) {
-							if (folderInfo != null)
-								detailView.setText(folderInfo.getDetail(mContext));
-						}
+					mDetailLoader.loadDetailAsync(folderID, folderInfo -> {
+						if (folderInfo != null)
+							detailView.setText(folderInfo.getDetail(mContext));
 					});
 			}
 

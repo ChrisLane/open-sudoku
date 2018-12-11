@@ -1,18 +1,13 @@
 package org.moire.opensudoku.gui;
 
-import java.io.File;
-import java.util.Date;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,10 +17,11 @@ import org.moire.opensudoku.db.SudokuDatabase;
 import org.moire.opensudoku.game.FolderInfo;
 import org.moire.opensudoku.gui.exporting.FileExportTask;
 import org.moire.opensudoku.gui.exporting.FileExportTaskParams;
-import org.moire.opensudoku.gui.exporting.FileExportTaskResult;
-import org.moire.opensudoku.gui.exporting.FileExportTask.OnExportFinishedListener;
 
-public class SudokuExportActivity extends Activity {
+import java.io.File;
+import java.util.Date;
+
+public class SudokuExportActivity extends AppCompatActivity {
 
 	/**
 	 * Id of folder to export. If -1, all folders will be exported.
@@ -56,9 +52,9 @@ public class SudokuExportActivity extends Activity {
 
 		setContentView(R.layout.sudoku_export);
 
-		mFileNameEdit = (EditText) findViewById(R.id.filename);
-		mDirectoryEdit = (EditText) findViewById(R.id.directory);
-		mSaveButton = (Button) findViewById(R.id.save_button);
+		mFileNameEdit = findViewById(R.id.filename);
+		mDirectoryEdit = findViewById(R.id.directory);
+		mSaveButton = findViewById(R.id.save_button);
 		mSaveButton.setOnClickListener(mOnSaveClickListener);
 
 		mFileExportTask = new FileExportTask(this);
@@ -96,12 +92,7 @@ public class SudokuExportActivity extends Activity {
 		//showDialog(DIALOG_SELECT_EXPORT_METHOD);
 	}
 
-	private OnClickListener mOnSaveClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			exportToFile();
-		}
-	};
+	private OnClickListener mOnSaveClickListener = v -> exportToFile();
 
 
 	@Override
@@ -112,12 +103,7 @@ public class SudokuExportActivity extends Activity {
 				return new AlertDialog.Builder(this)
 						.setTitle(R.string.export)
 						.setMessage(R.string.file_exists)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								startExportToFileTask();
-							}
-						})
+						.setPositiveButton(android.R.string.yes, (dialog, which) -> startExportToFileTask())
 						.setNegativeButton(android.R.string.no, null)
 						.create();
 			case DIALOG_PROGRESS:
@@ -134,7 +120,7 @@ public class SudokuExportActivity extends Activity {
 	private void exportToFile() {
 		File sdcard = new File("/sdcard");
 		if (!sdcard.exists()) {
-			Toast.makeText(SudokuExportActivity.this, R.string.sdcard_not_found, Toast.LENGTH_LONG);
+			Toast.makeText(SudokuExportActivity.this, R.string.sdcard_not_found, Toast.LENGTH_LONG).show();
 			finish();
 		}
 
@@ -150,19 +136,15 @@ public class SudokuExportActivity extends Activity {
 	}
 
 	private void startExportToFileTask() {
-		mFileExportTask.setOnExportFinishedListener(new OnExportFinishedListener() {
+		mFileExportTask.setOnExportFinishedListener(result -> {
+			dismissDialog(DIALOG_PROGRESS);
 
-			@Override
-			public void onExportFinished(FileExportTaskResult result) {
-				dismissDialog(DIALOG_PROGRESS);
-
-				if (result.successful) {
-					Toast.makeText(SudokuExportActivity.this, getString(R.string.puzzles_have_been_exported, result.file), Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(SudokuExportActivity.this, getString(R.string.unknown_export_error), Toast.LENGTH_LONG).show();
-				}
-				finish();
+			if (result.successful) {
+				Toast.makeText(SudokuExportActivity.this, getString(R.string.puzzles_have_been_exported, result.file), Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(SudokuExportActivity.this, getString(R.string.unknown_export_error), Toast.LENGTH_LONG).show();
 			}
+			finish();
 		});
 
 		String directory = mDirectoryEdit.getText().toString();
